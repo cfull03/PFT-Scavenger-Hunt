@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'destination_page.dart';
+import 'map_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -9,10 +10,17 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final List<String> destinations = [
-    'Main Entrance', 'Atrium', 'Lab Room 1', 'Lab Room 2',
-    'Lecture Hall', 'Library', 'Cafeteria', 'Gym',
-    'Rooftop Garden', 'Exit Gate'
+  final List<Map<String, String>> destinations = [
+    {'name': 'Main Entrance', 'type': 'Riddle'},
+    {'name': 'Atrium', 'type': 'Activity'},
+    {'name': 'Lab Room 1', 'type': 'Picture'},
+    {'name': 'Lab Room 2', 'type': 'Activity'},
+    {'name': 'Lecture Hall', 'type': 'Riddle'},
+    {'name': 'Library', 'type': 'Picture'},
+    {'name': 'Cafeteria', 'type': 'Activity'},
+    {'name': 'Gym', 'type': 'Activity'},
+    {'name': 'Rooftop Garden', 'type': 'Riddle'},
+    {'name': 'Exit Gate', 'type': 'Picture'},
   ];
 
   final Set<String> completedDestinations = {};
@@ -31,6 +39,17 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: const Text('PFT Scavenger Hunt'),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.map),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const MapPage()),
+              );
+            },
+          )
+        ],
       ),
       body: Column(
         children: [
@@ -57,7 +76,7 @@ class _HomePageState extends State<HomePage> {
               itemCount: destinations.length,
               itemBuilder: (context, index) {
                 final destination = destinations[index];
-                final isCompleted = completedDestinations.contains(destination);
+                final isCompleted = completedDestinations.contains(destination['name']);
 
                 return Card(
                   shape: RoundedRectangleBorder(
@@ -69,16 +88,17 @@ class _HomePageState extends State<HomePage> {
                       isCompleted ? Icons.check_circle : Icons.location_on,
                       color: isCompleted ? Colors.green : Theme.of(context).colorScheme.secondary,
                     ),
-                    title: Text(destination,
+                    title: Text(destination['name']!,
                         style: const TextStyle(fontWeight: FontWeight.bold)),
+                    subtitle: Text('Task: ${destination['type']}'),
                     trailing: const Icon(Icons.arrow_forward_ios),
                     onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => DestinationPage(
-                            destination: destination,
-                            onCheckIn: () => markCompleted(destination),
+                            destination: destination['name']!,
+                            onCheckIn: () => markCompleted(destination['name']!),
                           ),
                         ),
                       );

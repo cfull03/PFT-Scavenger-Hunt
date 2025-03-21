@@ -19,6 +19,7 @@ dependencies:
   flutter_map: ^6.1.0
   geolocator: ^10.1.0
   latlong2: ^0.9.0
+  image_picker: ^1.0.0
 
 
 dev_dependencies:
@@ -26,13 +27,12 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^3.0.1
 
-flutter:
-  uses-material-design: true
+# flutter:
+  #uses-material-design: true
 
-  assets:
-    - assets/images/player_sprite.png
-    - assets/images/lsu_logo.png
-    - assets/images/map_background.png
-    - assets/audio/bg_music.mp3
-    - assets/audio/success.wav
-    - assets/audio/fail.wav
+  #assets:
+    #- assets/images/lsu_logo.png
+    #- assets/images/map_background.png
+    #- assets/audio/bg_music.mp3
+    #- assets/audio/success.wav
+    #- assets/audio/fail.wav
