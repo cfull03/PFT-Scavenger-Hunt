@@ -1,4 +1,5 @@
 name: scavenger_hunt_pft
+
 description: "A Flutter-based scavenger hunt game for PFT layout."
 
 publish_to: 'none'
@@ -11,13 +12,14 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  cupertino_icons: ^1.0.8
   flame: ^1.12.0
   flame_forge2d: ^0.18.2+7
   forge2d: ^0.13.1
-  cupertino_icons: ^1.0.8
   flutter_map: ^6.1.0
   geolocator: ^10.1.0
   latlong2: ^0.9.0
+
 
 dev_dependencies:
   flutter_test:
@@ -29,3 +31,8 @@ flutter:
 
   assets:
     - assets/images/player_sprite.png
+    - assets/images/lsu_logo.png
+    - assets/images/map_background.png
+    - assets/audio/bg_music.mp3
+    - assets/audio/success.wav
+    - assets/audio/fail.wav

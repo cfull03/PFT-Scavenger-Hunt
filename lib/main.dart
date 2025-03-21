@@ -1,19 +1,31 @@
 import 'package:flutter/material.dart';
-import 'screens/map_screen.dart';
+import 'home_page.dart';
 
 void main() {
-  runApp(const ScavengerHuntApp());
+  runApp(const PFTScavengerHuntApp());
 }
 
-class ScavengerHuntApp extends StatelessWidget {
-  const ScavengerHuntApp({super.key});
+class PFTScavengerHuntApp extends StatelessWidget {
+  const PFTScavengerHuntApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Scavenger Hunt - Engineering College',
-      theme: ThemeData(primarySwatch: Colors.blue),
-      home: const MapScreen(),
+      title: 'PFT Scavenger Hunt',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF461D7C),
+          primary: const Color(0xFF461D7C),
+          secondary: const Color(0xFFFDD023),
+        ),
+        fontFamily: 'Arial',
+        scaffoldBackgroundColor: Colors.white,
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Color(0xFF461D7C),
+        ),
+        useMaterial3: true,
+      ),
+      home: const HomePage(),
     );
   }
 }
