@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:image_picker/image_picker.dart';
+import 'tasks/activity_task.dart';
+import 'tasks/riddle_task.dart';
+import 'tasks/picture_task.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({super.key});
@@ -14,7 +16,6 @@ class MapPage extends StatefulWidget {
 class _MapPageState extends State<MapPage> {
   LatLng? userLocation;
   final Distance distance = const Distance();
-  final ImagePicker _picker = ImagePicker();
 
   final List<Map<String, dynamic>> locations = [
     {'name': 'Main Entrance', 'lat': 30.4123, 'lng': -91.1800, 'type': 'riddle', 'task': 'I roar but have no mouth, I guard but cannot move. What am I?'},
@@ -50,47 +51,72 @@ class _MapPageState extends State<MapPage> {
     });
   }
 
-  Future<void> _handlePictureTask() async {
-    final XFile? image = await _picker.pickImage(source: ImageSource.camera);
-    if (image != null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Photo captured! Task complete.')),
-      );
-    }
-  }
-
-  void _showTaskDialog(Map<String, dynamic> loc) {
+  void _showTaskWidget(Map<String, dynamic> loc) {
     double dist = userLocation != null
         ? distance(userLocation!, LatLng(loc['lat'], loc['lng']))
         : double.infinity;
 
     bool canCheckIn = dist < 30;
 
+    if (!canCheckIn || checkedIn.contains(loc['name'])) {
+      showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: Text(loc['name']),
+          content: Text('Get closer to complete this task.\n\nDistance: ${dist.toStringAsFixed(1)} meters'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Close'),
+            ),
+          ],
+        ),
+      );
+      return;
+    }
+
+    Widget taskWidget;
+    switch (loc['type']) {
+      case 'riddle':
+        taskWidget = RiddleTaskWidget(
+          riddle: loc['task'],
+          onComplete: () {
+            setState(() {
+              checkedIn.add(loc['name']);
+            });
+            Navigator.pop(context);
+          },
+        );
+        break;
+      case 'activity':
+        taskWidget = ActivityTaskWidget(
+          taskDescription: loc['task'],
+          onComplete: () {
+            setState(() {
+              checkedIn.add(loc['name']);
+            });
+            Navigator.pop(context);
+          },
+        );
+        break;
+      case 'picture':
+        taskWidget = PictureTaskWidget(
+          instruction: loc['task'],
+          onComplete: () {
+            setState(() {
+              checkedIn.add(loc['name']);
+            });
+            Navigator.pop(context);
+          },
+        );
+        break;
+      default:
+        taskWidget = const SizedBox.shrink();
+    }
+
     showDialog(
       context: context,
-      builder: (_) => AlertDialog(
-        title: Text(loc['name']),
-        content: Text('${loc['task']}\n\nDistance: ${dist.toStringAsFixed(1)} meters'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Close'),
-          ),
-          if (canCheckIn && !checkedIn.contains(loc['name']))
-            TextButton(
-              onPressed: () async {
-                if (loc['type'] == 'picture') {
-                  await _handlePictureTask();
-                }
-                setState(() {
-                  checkedIn.add(loc['name']);
-                });
-                Navigator.pop(context);
-              },
-              child: const Text('Complete Task'),
-            ),
-        ],
-      ),
+      builder: (_) => taskWidget,
     );
   }
 
@@ -126,7 +152,7 @@ class _MapPageState extends State<MapPage> {
                   height: 80,
                   point: LatLng(loc['lat'], loc['lng']),
                   child: GestureDetector(
-                    onTap: () => _showTaskDialog(loc),
+                    onTap: () => _showTaskWidget(loc),
                     child: Tooltip(
                       message: loc['name'],
                       child: Icon(
