@@ -22,11 +22,11 @@ class _MapPageState extends State<MapPage> {
     {'name': 'Atrium', 'lat': 30.4125, 'lng': -91.1805, 'type': 'activity', 'task': 'Count the number of steps in the atrium.'},
     {'name': 'Lab Room 1', 'lat': 30.4127, 'lng': -91.1807, 'type': 'picture', 'task': 'Take a photo of the microscope.'},
     {'name': 'Lab Room 2', 'lat': 30.4129, 'lng': -91.1810, 'type': 'activity', 'task': 'Describe the project on display in Lab 2.'},
-    {'name': 'Lecture Hall', 'lat': 30.4131, 'lng': -91.1812, 'type': 'riddle', 'task': 'I talk without a mouth and hear without ears. What am I?'},
-    {'name': 'Library', 'lat': 30.4133, 'lng': -91.1814, 'type': 'picture', 'task': 'Take a photo of the oldest book you find.'},
-    {'name': 'Cafeteria', 'lat': 30.4135, 'lng': -91.1816, 'type': 'activity', 'task': 'List your favorite food item here.'},
-    {'name': 'Gym', 'lat': 30.4137, 'lng': -91.1818, 'type': 'activity', 'task': 'Do 10 jumping jacks.'},
-    {'name': 'Rooftop Garden', 'lat': 30.4139, 'lng': -91.1820, 'type': 'riddle', 'task': 'I rise with the sun and set with the moon, but never leave the roof. What am I?'},
+    {'name': 'Lecture Hall 1251', 'lat': 30.4131, 'lng': -91.1812, 'type': 'riddle', 'task': 'I talk without a mouth and hear without ears. What am I?'},
+    {'name': 'Cheveron Center', 'lat': 30.4133, 'lng': -91.1814, 'type': 'picture', 'task': 'Take a photo of the oldest book you find.'},
+    {'name': 'Main Lounge', 'lat': 30.4135, 'lng': -91.1816, 'type': 'activity', 'task': 'List your favorite food item here.'},
+    {'name': 'Panera Bread', 'lat': 30.4137, 'lng': -91.1818, 'type': 'activity', 'task': 'Do 10 jumping jacks.'},
+    {'name': 'Professor Hall Way', 'lat': 30.4139, 'lng': -91.1820, 'type': 'riddle', 'task': 'I rise with the sun and set with the moon, but never leave the roof. What am I?'},
     {'name': 'Exit Gate', 'lat': 30.4141, 'lng': -91.1822, 'type': 'picture', 'task': 'Take a photo with your team at the gate.'},
   ];
 
@@ -134,7 +134,7 @@ class _MapPageState extends State<MapPage> {
         children: [
           TileLayer(
             urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-            subdomains: ['a', 'b', 'c'],
+            subdomains: const ['a', 'b', 'c'],
           ),
           MarkerLayer(
             markers: [
@@ -163,7 +163,7 @@ class _MapPageState extends State<MapPage> {
                     ),
                   ),
                 );
-              }).toList(),
+              }),
             ],
           ),
         ],
