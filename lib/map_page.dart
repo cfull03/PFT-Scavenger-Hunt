@@ -63,7 +63,7 @@ class _MapPageState extends State<MapPage> {
         context: context,
         builder: (_) => AlertDialog(
           title: Text(loc['name']),
-          content: Text('Get closer to complete this task.\n\nDistance: \${dist.toStringAsFixed(1)} meters'),
+          content: const Text('Get closer to complete this task.\n\nDistance: \${dist.toStringAsFixed(1)} meters'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
