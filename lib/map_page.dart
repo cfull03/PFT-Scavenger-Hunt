@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:flutter/services.dart' show rootBundle;
+import 'dart:convert';
 import 'tasks/activity_task.dart';
 import 'tasks/riddle_task.dart';
 import 'tasks/picture_task.dart';
 
 class MapPage extends StatefulWidget {
-  const MapPage({super.key});
+  final Function(String) onCheckIn;
+  const MapPage({super.key, required this.onCheckIn});
 
   @override
   State<MapPage> createState() => _MapPageState();
@@ -18,15 +21,15 @@ class _MapPageState extends State<MapPage> {
   final Distance distance = const Distance();
 
   final List<Map<String, dynamic>> locations = [
-    {'name': 'Main Entrance', 'lat': 30.4123, 'lng': -91.1800, 'type': 'riddle', 'task': 'I roar but have no mouth, I guard but cannot move. What am I?'},
+    {'name': 'Main Entrance', 'lat': 30.4123, 'lng': -91.1800, 'type': 'riddle'},
     {'name': 'Atrium', 'lat': 30.4125, 'lng': -91.1805, 'type': 'activity', 'task': 'Count the number of steps in the atrium.'},
     {'name': 'Lab Room 1', 'lat': 30.4127, 'lng': -91.1807, 'type': 'picture', 'task': 'Take a photo of the microscope.'},
     {'name': 'Lab Room 2', 'lat': 30.4129, 'lng': -91.1810, 'type': 'activity', 'task': 'Describe the project on display in Lab 2.'},
-    {'name': 'Lecture Hall 1251', 'lat': 30.4131, 'lng': -91.1812, 'type': 'riddle', 'task': 'I talk without a mouth and hear without ears. What am I?'},
+    {'name': 'Lecture Hall 1251', 'lat': 30.4131, 'lng': -91.1812, 'type': 'riddle'},
     {'name': 'Cheveron Center', 'lat': 30.4133, 'lng': -91.1814, 'type': 'picture', 'task': 'Take a photo of the oldest book you find.'},
     {'name': 'Main Lounge', 'lat': 30.4135, 'lng': -91.1816, 'type': 'activity', 'task': 'List your favorite food item here.'},
     {'name': 'Panera Bread', 'lat': 30.4137, 'lng': -91.1818, 'type': 'activity', 'task': 'Do 10 jumping jacks.'},
-    {'name': 'Professor Hall Way', 'lat': 30.4139, 'lng': -91.1820, 'type': 'riddle', 'task': 'I rise with the sun and set with the moon, but never leave the roof. What am I?'},
+    {'name': 'Professor Hall Way', 'lat': 30.4139, 'lng': -91.1820, 'type': 'riddle'},
     {'name': 'Exit Gate', 'lat': 30.4141, 'lng': -91.1822, 'type': 'picture', 'task': 'Take a photo with your team at the gate.'},
   ];
 
@@ -36,6 +39,7 @@ class _MapPageState extends State<MapPage> {
   void initState() {
     super.initState();
     _getUserLocation();
+    _loadRiddleData();
   }
 
   Future<void> _getUserLocation() async {
@@ -51,6 +55,17 @@ class _MapPageState extends State<MapPage> {
     });
   }
 
+  Future<void> _loadRiddleData() async {
+    final jsonString = await rootBundle.loadString('assets/data/riddles.json');
+    final Map<String, dynamic> riddles = json.decode(jsonString);
+    for (var loc in locations) {
+      if (loc['type'] == 'riddle' && riddles.containsKey(loc['name'])) {
+        loc['task'] = riddles[loc['name']]['riddle'];
+        loc['answer'] = riddles[loc['name']]['answer'];
+      }
+    }
+  }
+
   void _showTaskWidget(Map<String, dynamic> loc) {
     double dist = userLocation != null
         ? distance(userLocation!, LatLng(loc['lat'], loc['lng']))
@@ -63,7 +78,7 @@ class _MapPageState extends State<MapPage> {
         context: context,
         builder: (_) => AlertDialog(
           title: Text(loc['name']),
-          content: const Text('Get closer to complete this task.\n\nDistance: \${dist.toStringAsFixed(1)} meters'),
+          content: Text('Get closer to complete this task.\n\nDistance: \${dist.toStringAsFixed(1)} meters'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
@@ -80,11 +95,12 @@ class _MapPageState extends State<MapPage> {
       case 'riddle':
         taskWidget = RiddleTaskWidget(
           riddle: loc['task'],
+          answer: loc['answer'],
           onComplete: () {
             setState(() {
               checkedIn.add(loc['name']);
             });
-            Navigator.pop(context);
+            widget.onCheckIn(loc['name']);
           },
         );
         break;
@@ -95,6 +111,7 @@ class _MapPageState extends State<MapPage> {
             setState(() {
               checkedIn.add(loc['name']);
             });
+            widget.onCheckIn(loc['name']);
             Navigator.pop(context);
           },
         );
@@ -106,6 +123,7 @@ class _MapPageState extends State<MapPage> {
             setState(() {
               checkedIn.add(loc['name']);
             });
+            widget.onCheckIn(loc['name']);
           },
         );
         break;

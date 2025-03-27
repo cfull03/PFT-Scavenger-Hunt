@@ -45,7 +45,7 @@ class _HomePageState extends State<HomePage> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const MapPage()),
+                MaterialPageRoute(builder: (context) => MapPage(onCheckIn: markCompleted)),
               );
             },
           )
@@ -96,13 +96,10 @@ class _HomePageState extends State<HomePage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => DestinationPage(
-                            destination: destination['name']!,
-                            onCheckIn: () => markCompleted(destination['name']!),
+                          builder: (context) => MapPage(onCheckIn: markCompleted),
                           ),
-                        ),
-                      );
-                    },
+                        );
+                      },
                   ),
                 );
               },

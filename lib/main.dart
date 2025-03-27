@@ -1,7 +1,3 @@
-// Updated typography & tone across app to reflect LSU brand identity
-// Fonts: Using Montserrat as a Proxima Nova alternative
-// Tone: LSU "Fierce for the Future" theme integrated
-
 import 'package:flutter/material.dart';
 import 'home_page.dart';
 
